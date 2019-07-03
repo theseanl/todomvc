@@ -1,3 +1,8 @@
+/**
+ * Edited for tscc - every types in d.ts files are included in the externs for the closure compiler, 
+ * which would prevent renaming property names used here; hence we change it to a normal d.ts file.
+ */
+
 interface ITodo {
   id: string,
   title: string,

@@ -4,7 +4,7 @@
 /*jshint newcap:false */
 /*global React */
 
-/// <reference path="./interfaces.d.ts"/>
+/// <reference path="./interfaces.ts"/>
 
 import * as classNames from "classnames";
 import * as React from "react";

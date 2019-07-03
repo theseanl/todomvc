@@ -4,7 +4,7 @@
 /*jshint newcap:false */
 /*global React, Router*/
 
-/// <reference path="./interfaces.d.ts"/>
+/// <reference path="./interfaces.ts"/>
 
 declare var Router;
 import * as React from "react";
@@ -33,7 +33,7 @@ class TodoApp extends React.Component<IAppProps, IAppState> {
       '/active': setState.bind(this, {nowShowing: ACTIVE_TODOS}),
       '/completed': setState.bind(this, {nowShowing: COMPLETED_TODOS})
     });
-    router.init('/');
+    router["init"]('/');
   }
 
   public handleNewTodoKeyDown(event : React.KeyboardEvent) {

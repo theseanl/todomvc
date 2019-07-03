@@ -1,0 +1,11 @@
+{
+	"modules": {
+		"bundle": "./app.tsx"
+	},
+	"external": {
+		"react": "React",
+		"react-dom": "ReactDOM",
+		"classnames": "classNames"
+	},
+	"prefix": "./"
+}

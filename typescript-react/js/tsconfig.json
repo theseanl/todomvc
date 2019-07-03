@@ -12,7 +12,8 @@
         "removeComments": true,
         "noLib": false,
         "preserveConstEnums": true,
-        "suppressImplicitAnyIndexErrors": true
+        "suppressImplicitAnyIndexErrors": true,
+		"lib": ["dom", "es2015"]
     },
     "filesGlob": [
         "**/*.ts",
@@ -21,7 +22,7 @@
     ],
     "files": [
         "constants.ts",
-        "interfaces.d.ts",
+        "interfaces.ts",
         "todoModel.ts",
         "utils.ts",
         "app.tsx",

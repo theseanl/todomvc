@@ -1,3 +1,15 @@
+
+> This is a demonstration of a process of adding TSCC to an existing project. The original app is at [todomvc/typescript-react](https://github.com/tastejs/todomvc/tree/master/examples/typescript-react). 
+> In order to make it compilable with TSCC, following changes were made:
+> ### Changes
+> - Modified `interfaces.d.ts` file to `interfaces.ts`, in order to enable property name mangling for properties in this file. TSCC does not rename any properties declared in ambiant contexts.
+> - Added `libs: ["dom", "es2015"]` to `tsconfig.json`. This is due to appearance of ES2015 structs in type declaration files of `react` ([react requires Map, Set](https://reactjs.org/docs/javascript-environment-requirements.html)). In normal typescript compilation, vendor type declaration files are not transpiled by the compiler. However, TSCC does pass it to the compiler in order to generate externs for closure compiler, and hence it requires ES2015 libs even if the consuming code does not use it.
+> - Declare `react`, `react-dom`, `classnames` as external modules, and provide them as a separate script tag in `index.html`.
+> - Change `Router#init` property access to use string literal `router["init"]`. This way closure compiler won't mangle this property name. An alternative way would be to fix it is to declare `Router` variable's type as `declare const Router: { init: any }`.
+> - Replace `localStorage` access to `window.localStorage`, as closure compiler complains about undeclared `localStorage` globl value.
+
+---
+ 
 # TypeScript & React TodoMVC Example
 
 > TypeScript is a language for application-scale JavaScript development. TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. Any browser. Any host. Any OS. Open Source.
@@ -62,22 +74,18 @@ _If you have other helpful links to share, or find any of the links above no lon
 
 ## Running
 
-A standalone TypeScript compiler is available on NPM.
+Install the tscc package from NPM.
 
-	npm install typescript
+	yarn install @tscc/tscc
 
 To compile the TypeScript in this project:
 
-	# from examples/typescript-react
-	$ ./node_modules/typescript/bin/tsc -p ./js/
+	# from typescript-react
+	$ yarn tscc --spec js/tscc.spec.json
 
-To be able to run the output JS files in the browser:
+Or alternatively, using flags instead of the spec file:
 
-	# from examples/typescript-react
-	$ ./node_modules/browserify/bin/cmd ./js/app.js -o ./js/bundle.js"
+	$ yarn tscc --module js/bundle:js/app.tsx --external react:React --external react-dom:ReactDOM --external classnames:classNames -- --project js 
 
 To run the app, spin up an HTTP server (e.g. `python -m SimpleHTTPServer`) and visit http://localhost/.../myexample/.
-Alternatively you can run:
 
-	# from examples/typescript-react
-	$ npm run start

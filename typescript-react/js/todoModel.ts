@@ -3,7 +3,7 @@
 /*jshint trailing:false */
 /*jshint newcap:false */
 
-/// <reference path="./interfaces.d.ts"/>
+/// <reference path="./interfaces.ts"/>
 
 import { Utils } from "./utils";
 

@@ -16,8 +16,10 @@
     "todomvc-common": "^1.0.1"
   },
   "devDependencies": {
+    "@tscc/tscc": "^0.4.3",
     "browserify": "^16.2.3",
     "node-static": "^0.7.11",
-    "typescript": "^2.9.2"
+    "tslib": "^1.10.0",
+    "typescript": "^3.5.3"
   }
 }
