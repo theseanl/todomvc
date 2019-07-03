@@ -1,0 +1,10 @@
+{
+	"modules": {
+		"app": "./app.ts"
+	},
+	"external": {
+		"backbone": "Backbone",
+		"lodash": "_"
+	},
+	"prefix": "./"
+}

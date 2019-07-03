@@ -1,3 +1,4 @@
+///<reference path="../node_modules/@tscc/tscc/third_party/closure_library/reflect.d.ts" />
 /* ---------------------------------------------------------------------------------------
 Todos.ts
 Microsoft grants you the right to use these script files under the Apache 2.0 license.
@@ -45,64 +46,9 @@ DEALINGS IN THE SOFTWARE.
 // [LocalStorage adapter](backbone-localstorage.js)
 // to persist Backbone models within your browser.
 
-declare var $: any;
-
-// TODO: Use DefinitelyTyped rather than ad-hoc definition here
-declare module Backbone {
-	export class Model {
-		constructor (attr? , opts? );
-		get(name: string): any;
-		set(name: string, val: any): void;
-		set(obj: any): void;
-		save(attr? , opts? ): void;
-		destroy(): void;
-		bind(ev: string, f: Function, ctx?: any): void;
-		toJSON(): any;
-		trigger(eventName: string, ...args: any[]): any;
-	}
-	export class Collection {
-		constructor (models? , opts? );
-		bind(ev: string, f: Function, ctx?: any): void;
-		collection: Model;
-		length: number;
-		create(attrs, opts? ): Collection;
-		each(f: (elem: any) => void ): void;
-		fetch(opts?: any): void;
-		last(): any;
-		last(n: number): any[];
-		filter(f: (elem: any) => any): Collection;
-		without(...values: any[]): Collection;
-		trigger(eventName: string, ...args: any[]): any;
-	}
-	export class View {
-		constructor (options? );
-		$(selector: string): any;
-		el: HTMLElement;
-		$el: any;
-		model: Model;
-		remove(): void;
-		delegateEvents: any;
-		make(tagName: string, attrs? , opts? ): View;
-		setElement(element: HTMLElement, delegate?: boolean): void;
-		tagName: string;
-		events: any;
-
-		static extend: any;
-	}
-	export class Router {
-		constructor (routes?: any );
-		routes: any;
-	}
-	export class History {
-		start(options?: any);
-		navigate(fragment: string, options: any);
-		pushState();
-	}
-	export var history: History;
-}
-declare var _: any;
-declare var Store: any;
-
+import * as Backbone from 'backbone';
+import * as _ from 'lodash';
+import reflect from 'goog:goog.reflect';
 
 // Todo Model
 // ----------
@@ -113,21 +59,21 @@ class Todo extends Backbone.Model {
 	// Default attributes for the todo.
 	defaults() {
 		return {
-			title: '',
-			completed: false
+			'title': '',
+			'completed': false
 		}
 	}
 
 	// Ensure that each todo created has `title`.
 	initialize() {
 		if (!this.get('title')) {
-			this.set({ 'title': this.defaults().title });
+			this.set({ 'title': this.defaults()['title'] });
 		}
 	}
 
 	// Toggle the `completed` state of this todo item.
 	toggle() {
-		this.save({ completed: !this.get('completed') });
+		this.save({ 'completed': !this.get('completed') });
 	}
 
 	// Remove this Todo from *localStorage* and delete its view.
@@ -163,12 +109,12 @@ class TodoList extends Backbone.Collection {
 	// We keep the Todos in sequential order, despite being saved by unordered
 	// GUID in the database. This generates the next order number for new items.
 	nextOrder() {
-		if (!length) return 1;
+		if (!this.length) return 1;
 		return this.last().get('order') + 1;
 	}
 
 	// Todos are sorted by their original insertion order.
-	comparator(todo: Todo) {
+	comparator = (todo: Todo)=> {
 		return todo.get('order');
 	}
 
@@ -195,27 +141,37 @@ class TodoView extends Backbone.View {
 
 	static ENTER_KEY:number = 13;
 	static ESC_KEY:number = 27;
+	
+	//... is a list tag.
+	preinitialize() {
+		this.tagName = "li"
+	}
+
+	// The DOM events specific to an item.
+	events(){
+		return transpose(reflect.object(TodoView, {
+			toggleDone: 'click .check',
+			edit: 'dblclick label.todo-content',
+			clear: 'click button.destroy',
+			updateOnEnter: 'keypress .edit',
+			revertOnEscape: 'keydown .edit',
+			close: 'blur .edit'
+		}));
+	}
 
 	constructor(options? ) {
-		//... is a list tag.
-		this.tagName = 'li';
-
-		// The DOM events specific to an item.
-		this.events = {
-			'click .check': 'toggleDone',
-			'dblclick label.todo-content': 'edit',
-			'click button.destroy': 'clear',
-			'keypress .edit': 'updateOnEnter',
-			'keydown .edit': 'revertOnEscape',
-			'blur .edit': 'close'
-		};
-
 		super(options);
 
 		// Cache the template function for a single item.
 		this.template = _.template($('#item-template').html());
 
-		_.bindAll(this, 'render', 'close', 'remove', 'toggleVisible');
+		_.bindAll(
+			this,
+			reflect.objectProperty('render', TodoView.prototype),
+			reflect.objectProperty('close', TodoView.prototype),
+			reflect.objectProperty('remove', TodoView.prototype),
+			reflect.objectProperty('toggleVisible', TodoView.prototype)
+		);
 		this.model.bind('change', this.render);
 		this.model.bind('destroy', this.remove);
 		this.model.bind('visible', this.toggleVisible);
@@ -255,7 +211,7 @@ class TodoView extends Backbone.View {
 		var trimmedValue = this.input.val().trim();
 
 		if (trimmedValue) {
-			this.model.save({ title: trimmedValue });
+			this.model.save({ 'title': trimmedValue });
 		} else {
 			this.clear();
 		}
@@ -291,7 +247,7 @@ class TodoView extends Backbone.View {
 class TodoRouter extends Backbone.Router {
 
 	routes = {
-		'*filter': 'setFilter'
+		'*filter': reflect.objectProperty('setFilter', TodoRouter.prototype)
 	};
 
 	constructor() {
@@ -314,11 +270,13 @@ class TodoRouter extends Backbone.Router {
 class AppView extends Backbone.View {
 
 	// Delegated events for creating new items, and clearing completed ones.
-	events = {
-		'keypress .new-todo': 'createOnEnter',
-		'click .todo-clear button': 'clearCompleted',
-		'click .toggle-all': 'toggleAllComplete'
-	};
+	events(){
+		return transpose(reflect.object(AppView, {
+			createOnEnter: 'keypress .new-todo',
+			clearCompleted: 'click .todo-clear button',
+			toggleAllComplete: 'click .toggle-all'
+		}));
+	}
 
 	input: any;
 	allCheckbox: HTMLInputElement;
@@ -335,10 +293,17 @@ class AppView extends Backbone.View {
 		// At initialization we bind to the relevant events on the `Todos`
 		// collection, when items are added or changed. Kick things off by
 		// loading any preexisting todos that might be saved in *localStorage*.
-		_.bindAll(this, 'addOne', 'addAll', 'render', 'toggleAllComplete', 'filter');
+		_.bindAll(
+			this,
+			reflect.objectProperty('addOne', AppView.prototype),
+			reflect.objectProperty('addAll', AppView.prototype),
+			reflect.objectProperty('render', AppView.prototype),
+			reflect.objectProperty('toggleAllComplete', AppView.prototype),
+			reflect.objectProperty('filter', AppView.prototype)
+		);
 
 		this.input = this.$('.new-todo');
-		this.allCheckbox = this.$('.toggle-all')[0];
+		this.allCheckbox = <HTMLInputElement>this.$('.toggle-all')[0];
 		this.mainElement = this.$('.main')[0];
 		this.footerElement = this.$('.footer')[0];
 		this.statsTemplate = _.template($('#stats-template').html());
@@ -366,9 +331,9 @@ class AppView extends Backbone.View {
 			this.footerElement.style.display = 'block';
 
 			this.$('.todo-stats').html(this.statsTemplate({
-				total: Todos.length,
-				completed: completed,
-				remaining: remaining
+				'total': Todos.length,
+				'completed': completed,
+				'remaining': remaining
 			}));
 
 			this.$('.filters li a')
@@ -382,6 +347,7 @@ class AppView extends Backbone.View {
 		}
 
 		this.allCheckbox.checked = !remaining;
+		return this;
 	}
 
 	// Add a single todo item to the list by creating a view for it, and
@@ -441,8 +407,18 @@ class AppView extends Backbone.View {
 
 }
 
+type dict = {[key: string]: string}
+function transpose(obj: dict):dict {
+	var transposed = {};
+	for (var key in obj) {
+		transposed[obj[key]] = key;
+	}
+	return transposed;
+}
+
 // Load the application once the DOM is ready, using `jQuery.ready`:
 $(() => {
 	// Finally, we kick things off by creating the **App**.
 	new AppView();
 });
+
