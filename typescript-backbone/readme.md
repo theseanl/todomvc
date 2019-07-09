@@ -1,5 +1,5 @@
 
-> This is a demonstration of adopting TSCC to an existing project. The original app is at [todomvc/typescript-react](https://github.com/tastejs/todomvc/tree/master/examples/typescript-react). 
+> This is a demonstration of adopting TSCC to an existing project. The original app is at [todomvc/typescript-backbone](https://github.com/tastejs/todomvc/tree/master/examples/typescript-backbone). 
 > In order to make it compatible with TSCC, following changes were made:
 > ### Changes
 

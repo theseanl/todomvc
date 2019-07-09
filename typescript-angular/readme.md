@@ -1,3 +1,11 @@
+
+> This is a demonstration of adopting TSCC to an existing project. The original app is at [todomvc/typescript-angular](https://github.com/tastejs/todomvc/tree/master/examples/typescript-angular). 
+> In order to make it compatible with TSCC, following changes were made:
+> ### Changes
+> - Re-organized references to use es module imports. Removed `module 'todos'` and triple-slash directives.
+> - [Exported](https://github.com/angular/tsickle#exporting-decorators) controller methods which are used in HTML. Added `declare` to `ITodoScope` in order to preserve its property names. Since angularjs depends on referencing properties and methods name on html, it requires a lot of additional work to preserve those from JS's side.
+> - Added types for AngularJS from DefinitelyTyped. Reference global `angular` variable via `import * as angular from 'angular'`. Fixed AngularJS version specified in package.json to what is actually included with the package.
+
 # TypeScript & AngularJS TodoMVC Example
 
 > TypeScript is a language for application-scale JavaScript development. TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. Any browser. Any host. Any OS. Open Source.
@@ -80,11 +88,11 @@ It's definitely possible to convert the vanillajs todo app into TypeScript, but 
 
 A standalone TypeScript compiler is available on NPM.
 
-	npm install
+	yarn install
 
 To compile the TypeScript in this project:
 
 	# from examples/typescript-angular
-	$ npm run compile
-
-Or use Visual Studio with the TypeScript plugin.
+	$ yarn tscc --spec js
+	# or alternatively without spec files,
+	$ yarn tscc --module Application:js/Application.ts --external angular:angular --prefix js/ -- --project js

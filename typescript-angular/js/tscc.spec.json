@@ -1,0 +1,9 @@
+{
+	"modules": {
+		"Application": "./Application.ts"
+	},
+	"external": {
+		"angular": "angular"
+	},
+	"prefix": "./"
+}

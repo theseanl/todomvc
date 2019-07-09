@@ -1,8 +1,6 @@
-/// <reference path='../_all.ts' />
+import { TodoItem } from '../models/TodoItem';
 
-module todos {
-	export interface ITodoStorage {
-		get (): TodoItem[];
-		put(todos: TodoItem[]);
-	}
+export interface ITodoStorage {
+    get(): TodoItem[];
+    put(todos: TodoItem[]);
 }
