@@ -60,10 +60,10 @@
   resolved "https://registry.yarnpkg.com/@types/angular/-/angular-1.6.56.tgz#20124077bd44061e018c7283c0bb83f4b00322dd"
   integrity sha512-HxtqilvklZ7i6XOaiP7uIJIrFXEVEhfbSY45nfv2DeBRngncI58Y4ZOUMiUkcT8sqgLL1ablmbfylChUg7A3GA==
 
-angular@1.4.8:
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/angular/-/angular-1.4.8.tgz#f4573d5019d21ebf44a6b5c28a14fbd9d5967449"
-  integrity sha1-9Fc9UBnSHr9EprXCihT72dWWdEk=
+angular@1.7.9:
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.9.tgz#e52616e8701c17724c3c238cfe4f9446fd570bc4"
+  integrity sha512-5se7ZpcOtu0MBFlzGv5dsM1quQDoDeUTwZrWjGtTNA7O88cD8TEk5IEKCTDa3uECV9XnvKREVUr7du1ACiWGFQ==
 
 ansi-regex@^4.1.0:
   version "4.1.0"

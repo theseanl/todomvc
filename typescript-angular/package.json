@@ -4,7 +4,7 @@
     "compile": "tsc --sourcemap --out js/Application.js js/_all.ts"
   },
   "dependencies": {
-    "angular": "1.4.8",
+    "angular": "1.7.9",
     "google-closure-compiler-linux": "20190819.0.0",
     "todomvc-app-css": "^2.0.0",
     "todomvc-common": "^1.0.1"
